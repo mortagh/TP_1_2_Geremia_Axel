@@ -37,7 +37,6 @@ const createUser = (req, res) => {
   if (!email) errors.email = "L'email est requis";
   if (!role) errors.role = "Le rôle est requis";
 
-  
   // email doit être unique
   if (email) {
     const existingUser = USERS.find((u) => u.email === email);
@@ -48,22 +47,26 @@ const createUser = (req, res) => {
 
   // validation du role
   if (role) {
-    const allowedRoles = ['user', 'admin'];
+    const allowedRoles = ["user", "admin"];
     if (!allowedRoles.includes(role)) {
-      errors.roleInvalid = "Le rôle doit obligatoirement être 'user' ou 'admin'";
+      errors.roleInvalid =
+        "Le rôle doit obligatoirement être 'user' ou 'admin'";
     }
   }
 
   // toutes les erreurs
   if (Object.keys(errors).length > 0) {
-    return res.status(400).json({ 
-      message: "Veuillez corriger les erreurs suivantes", 
-      details: errors 
+    return res.status(400).json({
+      message: "Veuillez corriger les erreurs suivantes",
+      details: errors,
     });
   }
 
   try {
-    const newUser = new User(USERS.length + 1, name, email, role);
+    const newId =
+      USERS.length > 0 ? Math.max(...USERS.map((u) => u.id)) + 1 : 1;
+
+    const newUser = new User(newId, name, email, role);
 
     USERS.push(newUser);
     res.status(201).json(newUser);
@@ -112,5 +115,5 @@ module.exports = {
   getUsersByRole,
   createUser,
   updateUser,
-  deleteUser
+  deleteUser,
 };
