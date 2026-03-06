@@ -40,12 +40,18 @@ const fetchUsers = async () => {
     return user.role === roleFilter;
   });
 
-  const handleDelete = async (id: string) => {
-    if (window.confirm("Voulez-vous vraiment bannir ce héros ?")) {
+const handleDelete = async (id: string) => {
+  const confirmed = window.confirm("Par ma barbe ! Voulez-vous vraiment bannir ce héros de nos rangs ?");
+  
+  if (confirmed) {
+    try {
       await deleteUser(id);
       fetchUsers();
+    } catch (err) {
+      console.error("Erreur lors du bannissement");
     }
-  };
+  }
+};
 
   const handleEdit = (user: User) => {
     setUserToEdit(user);
